@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S2Tok — Streaming 3D Gaussian Reconstruction with Persistent Spatial Tokens</title>
+<meta name="description" content="S2Tok reconstructs a scene as 3D Gaussians from a video, one frame at a time, from the images alone. Its scene memory is a set of tokens kept inside the vision backbone.">
+<meta name="theme-color" content="#006CFA">
+
+<link rel="icon" href="assets/brand/favicon.ico?v=3c942d26" sizes="32x32">
+<link rel="icon" href="assets/brand/icon.svg?v=28400c3b" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png?v=08015973">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="S2Tok — Streaming 3D Gaussian Reconstruction with Persistent Spatial Tokens">
+<meta property="og:description" content="3D Gaussians from a video, one frame at a time, with a scene memory kept inside the vision backbone.">
+<meta property="og:image" content="assets/videos/mip360_room.jpg">
+
+<!-- Enables JS-only progressive enhancements (scroll reveal, etc.) -->
+<script>document.documentElement.className += " js";</script>
+<link rel="stylesheet" href="assets/css/styles.css?v=7ba2c774">
+<link rel="stylesheet" href="assets/css/site.css?v=dde6f55c">
+</head>
+<body>
+<a class="skip-link" href="#top">Skip to content</a>
+
+<!-- ===================== Header ===================== -->
+<header class="site-header">
+  <div class="header-pill">
+    <a class="brand-mark" href="#top" aria-label="Back to top">
+      <span class="brand-word">S2Tok</span>
+    </a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav">
+      <a href="#results">Results</a>
+      <a href="#viewer">Viewer</a>
+      <a href="#method">Method</a>
+      <a href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ===================== Hero / masthead ===================== -->
+  <section class="hero">
+    <div class="wide">
+      <div class="hero-intro reveal">
+        <p class="eyebrow">Applied Intuition · Research</p>
+        <h1>S2Tok: Streaming 3D Gaussian reconstruction with <span class="accent">persistent spatial tokens</span></h1>
+        <div class="hero-meta">
+          <p class="byline"><span class="names">
+            <span class="author"><a href="https://fangli333.github.io/" target="_blank" rel="noopener">Fang Li</a><sup>1,2,*</sup></span>
+            <span class="author"><a href="https://domejiraphon.github.io/" target="_blank" rel="noopener">Jiraphon Yenphraphai</a><sup>1,3,*</sup></span>
+            <span class="author"><a href="https://www.linkedin.com/in/quentin-herau-phd-38378b140" target="_blank" rel="noopener">Quentin Herau</a><sup>1</sup></span>
+            <span class="author"><a href="https://deppmeng.github.io/" target="_blank" rel="noopener">Depu Meng</a><sup>1</sup></span>
+            <span class="author"><a href="https://www.linkedin.com/in/yihan-hu96" target="_blank" rel="noopener">Yihan Hu</a><sup>1</sup></span>
+            <span class="author"><a href="https://hk.linkedin.com/in/tianshuo-xu-04463336b" target="_blank" rel="noopener">Tianshuo Xu</a><sup>1</sup></span>
+            <span class="author"><a href="https://ece.illinois.edu/about/directory/faculty/n-ahuja" target="_blank" rel="noopener">Narendra Ahuja</a><sup>2</sup></span>
+            <span class="author"><a href="https://zhanwei.site/" target="_blank" rel="noopener">Wei Zhan</a><sup>1,4,†</sup></span>
+          </span></p>
+          <p class="affil">
+            <span><sup>1</sup>Applied Intuition</span>
+            <span><sup>2</sup>University of Illinois Urbana-Champaign</span>
+            <span><sup>3</sup>Purdue University</span>
+            <span><sup>4</sup>University of California, Berkeley</span>
+          </p>
+          <p class="affil-note">
+            <span><sup>*</sup>Work done during an internship at Applied Intuition</span>
+            <span><sup>†</sup>Corresponding author</span>
+          </p>
+        </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code →</a>
+          <span class="btn btn-disabled" aria-disabled="true">Paper (in preparation)</span>
+          <span class="btn btn-disabled" aria-disabled="true">arXiv (on release)</span>
+          <span class="btn btn-disabled" aria-disabled="true">Weights (on release)</span>
+          <span class="btn btn-disabled" aria-disabled="true">BibTeX (on release)</span>
+        </div>
+      </div>
+      <!-- standfirst on the left, teaser on the right (stacked on narrow screens) -->
+      <div class="split hero-split reveal">
+        <p class="lead">S2Tok continuously reconstructs a 3D Gaussian scene from a streaming video, one
+          frame at a time, from the images alone — <mark class="hl">no camera, depth, or other priors</mark>.
+          It leverages a size-adaptive set of latent spatial tokens as the persistent scene state, and
+          predicts non-pixel-aligned Gaussians rather than pixel-aligned predictions. Whenever there is a
+          new observation, the existing spatial tokens update according to the new observation, and the
+          new frame tokens are aligned to the latent spatial space and selectively admitted.</p>
+        <figure class="hero-teaser">
+          <img src="assets/figures/s2tok_teaser.jpg?v=43fdc248" width="2400" height="1100"
+               alt="S2Tok reconstructions of outdoor, indoor and AI-generated scenes, with the input camera paths">
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Results: scene viewer ===================== -->
+  <!-- A scrollable strip of context-view thumbnails above one player (assets/js/site.js). Without JS the first clip
+       loops and every thumbnail links to its clip. -->
+  <section class="figure-band" id="results">
+    <div class="wide reveal">
+      <p class="eyebrow">Results</p>
+      <h2>One pass over the video, a scene after every frame</h2>
+      <figure class="figure scene-viewer" data-scene-viewer>
+        <div class="scene-strip" aria-label="Scenes">
+          <a class="scene-thumb is-active" href="assets/videos/mip360_room.mp4?v=49b670f7" data-poster="assets/videos/mip360_room.jpg?v=aeabe11a" data-title="Mip-NeRF 360 · Room" title="Mip-NeRF 360 · Room" aria-current="true"><img src="assets/videos/thumbs/mip360_room.jpg?v=7c962ddf" alt="Mip-NeRF 360 · Room" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/mip360_counter.mp4?v=af8d0df6" data-poster="assets/videos/mip360_counter.jpg?v=45aeacb1" data-title="Mip-NeRF 360 · Counter" title="Mip-NeRF 360 · Counter"><img src="assets/videos/thumbs/mip360_counter.jpg?v=905592b8" alt="Mip-NeRF 360 · Counter" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/mip360_bonsai.mp4?v=0edb0ace" data-poster="assets/videos/mip360_bonsai.jpg?v=14102c13" data-title="Mip-NeRF 360 · Bonsai" title="Mip-NeRF 360 · Bonsai"><img src="assets/videos/thumbs/mip360_bonsai.jpg?v=4bbfaabc" alt="Mip-NeRF 360 · Bonsai" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/mip360_garden.mp4?v=f9613dc6" data-poster="assets/videos/mip360_garden.jpg?v=95c95456" data-title="Mip-NeRF 360 · Garden" title="Mip-NeRF 360 · Garden"><img src="assets/videos/thumbs/mip360_garden.jpg?v=22827fbb" alt="Mip-NeRF 360 · Garden" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/dl3dv_001.mp4?v=65030e31" data-poster="assets/videos/dl3dv_001.jpg?v=7db34081" data-title="DL3DV · 001" title="DL3DV · 001"><img src="assets/videos/thumbs/dl3dv_001.jpg?v=ce428fea" alt="DL3DV · 001" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/dl3dv_005.mp4?v=f1e59df8" data-poster="assets/videos/dl3dv_005.jpg?v=35a98b7b" data-title="DL3DV · 005" title="DL3DV · 005"><img src="assets/videos/thumbs/dl3dv_005.jpg?v=666abb64" alt="DL3DV · 005" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/dl3dv_006.mp4?v=91837d78" data-poster="assets/videos/dl3dv_006.jpg?v=f435993f" data-title="DL3DV · 006" title="DL3DV · 006"><img src="assets/videos/thumbs/dl3dv_006.jpg?v=209eefca" alt="DL3DV · 006" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/dl3dv_007.mp4?v=a5f3847c" data-poster="assets/videos/dl3dv_007.jpg?v=32cae6fd" data-title="DL3DV · 007" title="DL3DV · 007"><img src="assets/videos/thumbs/dl3dv_007.jpg?v=ef0bd834" alt="DL3DV · 007" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/re10k_000.mp4?v=d8900a7a" data-poster="assets/videos/re10k_000.jpg?v=54b94e8d" data-title="RealEstate10K · 000" title="RealEstate10K · 000"><img src="assets/videos/thumbs/re10k_000.jpg?v=f9f1be67" alt="RealEstate10K · 000" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/re10k_002.mp4?v=97ef7f9b" data-poster="assets/videos/re10k_002.jpg?v=97a8b9c8" data-title="RealEstate10K · 002" title="RealEstate10K · 002"><img src="assets/videos/thumbs/re10k_002.jpg?v=9bebca2c" alt="RealEstate10K · 002" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/re10k_003.mp4?v=fe3250dd" data-poster="assets/videos/re10k_003.jpg?v=32d10120" data-title="RealEstate10K · 003" title="RealEstate10K · 003"><img src="assets/videos/thumbs/re10k_003.jpg?v=c3fa2c73" alt="RealEstate10K · 003" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/re10k_004.mp4?v=ef847410" data-poster="assets/videos/re10k_004.jpg?v=722535c0" data-title="RealEstate10K · 004" title="RealEstate10K · 004"><img src="assets/videos/thumbs/re10k_004.jpg?v=57320393" alt="RealEstate10K · 004" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/re10k_007.mp4?v=f5355ea4" data-poster="assets/videos/re10k_007.jpg?v=489a8bee" data-title="RealEstate10K · 007" title="RealEstate10K · 007"><img src="assets/videos/thumbs/re10k_007.jpg?v=ca90086d" alt="RealEstate10K · 007" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/scannetpp_01.mp4?v=8f93a815" data-poster="assets/videos/scannetpp_01.jpg?v=04595a9f" data-title="ScanNet++ · 01" title="ScanNet++ · 01"><img src="assets/videos/thumbs/scannetpp_01.jpg?v=c5267767" alt="ScanNet++ · 01" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/scannetpp_03.mp4?v=9a491514" data-poster="assets/videos/scannetpp_03.jpg?v=8d52d202" data-title="ScanNet++ · 03" title="ScanNet++ · 03"><img src="assets/videos/thumbs/scannetpp_03.jpg?v=19180651" alt="ScanNet++ · 03" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/castle.mp4?v=aea3b068" data-poster="assets/videos/castle.jpg?v=99cf6be2" data-title="Castle" title="Castle"><img src="assets/videos/thumbs/castle.jpg?v=e0191dee" alt="Castle" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/knight.mp4?v=ebd21aac" data-poster="assets/videos/knight.jpg?v=40dbdb04" data-title="Knight" title="Knight"><img src="assets/videos/thumbs/knight.jpg?v=c116ea69" alt="Knight" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/courthouse.mp4?v=8a0cde84" data-poster="assets/videos/courthouse.jpg?v=42d1cdf0" data-title="Courthouse" title="Courthouse"><img src="assets/videos/thumbs/courthouse.jpg?v=c6c919e6" alt="Courthouse" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/living_room.mp4?v=1a235540" data-poster="assets/videos/living_room.jpg?v=7edf69ed" data-title="Living Room" title="Living Room"><img src="assets/videos/thumbs/living_room.jpg?v=8c589a86" alt="Living Room" width="192" height="192" loading="lazy"></a>
+          <a class="scene-thumb" href="assets/videos/mid_century.mp4?v=6b9e14ba" data-poster="assets/videos/mid_century.jpg?v=55a43ee8" data-title="Mid Century" title="Mid Century"><img src="assets/videos/thumbs/mid_century.jpg?v=e29940ac" alt="Mid Century" width="192" height="192" loading="lazy"></a>
+        </div>
+        <div class="figure-stage figure-stage--dark">
+          <div class="media-frame media-frame--gallery">
+            <video src="assets/videos/mip360_room.mp4?v=49b670f7" poster="assets/videos/mip360_room.jpg?v=aeabe11a"
+                   muted loop playsinline controls preload="metadata" data-autoplay
+                   aria-label="Mip-NeRF 360 · Room"></video>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ===================== Interactive 3DGS viewers ===================== -->
+  <!-- Final-step reconstructions; each square orbits its scene (assets/js/splat-viewer.js).
+       Drag the divider: tokens on the left, RGB on the right. -->
+  <section id="viewer">
+    <div class="wide reveal">
+      <p class="eyebrow">Interactive</p>
+      <h2>Explore the reconstructed scenes</h2>
+      <p class="gs-legend">Left of the divider: each color marks the Gaussians decoded from one latent spatial
+        token (32 per token). Right: the same Gaussians in their RGB colors, i.e. the reconstructed scene.</p>
+      <p class="gs-hint">Drag the divider to compare · drag the scene to orbit · right-drag or shift-drag to pan · click, then scroll to zoom · double-click to reset</p>
+      <div class="gs-grid" data-tokens="assets/splats/token_colors.bin?v=503d6dba" data-pullback="1.3">
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/mip360_bonsai.bin?v=3ff61f7f" data-target="0.1019,0.1104,0.82"
+               role="group" aria-label="Bonsai: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/mip360_room.bin?v=6aa4f883" data-target="0.3732,0.3163,0.8477"
+               role="group" aria-label="Room: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/dl3dv_007.bin?v=0989ae19" data-target="0.2794,0.0233,0.6941"
+               role="group" aria-label="DL3DV 007: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/re10k_002.bin?v=9f6c7843" data-target="-0.1309,0.0829,0.9711"
+               role="group" aria-label="RE10K 002: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/re10k_003.bin?v=137d5246" data-target="0.1715,-0.0188,0.7082"
+               role="group" aria-label="RE10K 003: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/re10k_007.bin?v=6b116853" data-target="0.3111,0.0508,0.5043"
+               role="group" aria-label="RE10K 007: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/living_room.bin?v=e19ad4f4" data-target="0.1373,0.0913,0.957"
+               role="group" aria-label="Living Room: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+        <div class="gs-cell">
+          <div class="gs-viewer" data-src="assets/splats/knight.bin?v=9b9079a2" data-target="-0.0057,-0.0133,0.6451"
+               role="group" aria-label="Knight: interactive 3D Gaussian reconstruction">
+            <div class="gs-split" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Method ===================== -->
+  <section id="method">
+    <div class="wide reveal">
+      <p class="eyebrow">Method</p>
+      <h2>The scene memory lives inside the backbone</h2>
+      <figure class="figure">
+        <div class="figure-stage figure-stage--plain">
+          <img src="assets/figures/s2tok_pipeline.png?v=c5fa8730" width="2600" height="757"
+               alt="S2Tok pipeline: encoder, stream-spatial transformer with scene tokens, admission, multi-scale decoder and Gaussian head">
+        </div>
+      </figure>
+      <div class="contribs">
+        <div class="contrib">
+          <div class="num">1</div>
+          <h3>Tokenized streaming reconstruction</h3>
+          <p class="muted">The scene is a set of latent spatial tokens. After every frame they are decoded
+            into 3D Gaussians: a reconstruction of everything seen so far, at every step.</p>
+        </div>
+        <div class="contrib">
+          <div class="num">2</div>
+          <h3>One image per step, no KV cache</h3>
+          <p class="muted">Each step sees only the current frame. Past frames are not kept or re-attended;
+            the latent spatial tokens are the only state carried to the next step.</p>
+        </div>
+        <div class="contrib">
+          <div class="num">3</div>
+          <h3>Adaptive token length</h3>
+          <p class="muted">The number of latent spatial tokens is not fixed: each step updates the existing
+            tokens and admits only the selected tokens of the new frame.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===================== Footer ===================== -->
+<footer class="site-footer">
+  <div class="wide">
+    <div class="foot-grid">
+      <div>
+        <a class="brand-mark" href="#top"><span class="brand-word">S2Tok</span></a>
+        <p class="muted" style="max-width:32ch">Streaming 3D Gaussian reconstruction with persistent spatial tokens.</p>
+      </div>
+      <nav>
+        <a href="#results">Results</a> ·
+        <a href="#viewer">Viewer</a> ·
+        <a href="#method">Method</a> ·
+        <a href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code ↗</a> ·
+        <a href="https://www.appliedintuition.com/research" target="_blank" rel="noopener">Applied Intuition Research ↗</a>
+      </nav>
+    </div>
+    <p class="copyright">© 2026 The S2Tok Authors.</p>
+  </div>
+</footer>
+
+<script src="assets/js/main.js?v=92919230"></script>
+<script src="assets/js/splat-viewer.js?v=cc6df614"></script>
+<script src="assets/js/site.js?v=ce4de8f9"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Per-site overrides.
+   ---------------------------------------------------------------------------
+   styles.css is the shared design system — do NOT edit it. Put everything
+   specific to THIS site here, and build it ONLY from the existing design
+   tokens (--blue, --ink, --gray, the type/spacing scales). Never hard-code a
+   hex color or font stack that a token already covers.
+
+   Most sites need very little here. Examples of legitimate overrides:
+
+   .hero { padding-top: ...; }          // tweak masthead rhythm
+   #results .wide { max-width: 1120px; } // narrow one wide band
+   .my-diagram { border-top: 2px solid var(--blue); }  // a one-off motif
+
+   If you find yourself redefining a color or a whole component, stop — reuse a
+   token or a component class from styles.css instead.
+   ========================================================================== */
+
+/* Scene viewer: the four-panel clips are 1462 x 720; single clips (1220 x 720) pillarbox. */
+.media-frame--gallery { aspect-ratio: 1462 / 720; }
+
+/* Scene strip above the player: one context view (the first input frame) per scene, at full color;
+   scrolls sideways, the active scene is outlined in ink. With a mouse, thumbnails near the cursor
+   magnify like a dock (scale and spacing set by site.js; vertical room comes from the padding). */
+.scene-strip {
+  position: relative; display: flex; gap: var(--space-1);
+  overflow-x: auto; overscroll-behavior-x: contain;
+  padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--gray-line);
+  scrollbar-width: thin; scrollbar-color: var(--gray-line) transparent;
+}
+.scene-thumb {
+  flex: 0 0 auto; width: 96px; aspect-ratio: 1; position: relative;
+  border-radius: 6px; overflow: hidden; outline: 2px solid transparent; outline-offset: 2px;
+  transform-origin: 0 50%; transition: transform .14s ease-out, outline-color .2s ease;
+}
+.scene-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.scene-thumb.is-active { outline-color: var(--ink); }
+@media (max-width: 640px) {
+  .scene-strip { padding: var(--space-2); }
+  .scene-thumb { width: 72px; }
+}
+@media (prefers-reduced-motion: reduce) { .scene-thumb { transition: none; transform: none !important; } }
+
+/* Method figure: the wide pipeline diagram on white, at the full width of the band. */
+.figure-stage--plain { background: var(--white); }
+.figure-stage--plain img { width: 100%; height: auto; }
+
+/* The title's long words ("reconstruction") fit the column; don't hyphenate them. */
+.hero h1 { -webkit-hyphens: manual; hyphens: manual; }
+
+/* Author block: names as the paper sets them (semibold, superscript affiliations), then
+   affiliations and notes in gray; the standfirst follows it. */
+.hero .byline { font-family: var(--font-sans); font-size: var(--fs-body); margin-bottom: var(--space-1); }
+.hero .byline .names { display: flex; flex-wrap: wrap; gap: 0.3rem 1.2rem; font-weight: 600; }
+.hero .author { white-space: nowrap; }
+.hero .affil, .hero .affil-note {
+  display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem;
+  font-family: var(--font-sans); color: var(--gray); margin: 0 0 0.35rem;
+}
+.hero .affil { font-size: var(--fs-meta); }
+.hero .affil-note { font-size: var(--fs-eyebrow); }
+.hero-meta sup { font-size: 0.68em; line-height: 0; margin-left: 0.08em; }
+.hero .lead { margin: var(--space-3) 0 0; }
+
+/* Standfirst on the left, teaser figure on the right; stacked below 860px (.split). */
+.hero-split { margin-top: var(--space-4); }
+.hero-split .lead, .hero-split .hero-teaser { margin: 0; }
+.hero-split .lead { font-size: var(--fs-lead); }
+.hero-teaser img { display: block; width: 100%; height: auto; }
+
+/* Title, authors and standfirst span the same width as the teaser figure below them
+   (the template caps the intro at 60rem and the lead at 56ch). */
+.hero-intro { max-width: none; }
+.hero .lead { max-width: none; }
+
+/* Author homepage links keep the byline's ink; blue on hover. */
+.hero .author a { color: inherit; }
+.hero .author a:hover { color: var(--blue); text-decoration: underline; }
+
+/* Interactive 3DGS viewers: 4 x 2 grid of square canvases (2 columns on narrow screens).
+   Drag the vertical divider to compare token colors on the left with RGB on the right. */
+.gs-legend { max-width: 72ch; margin: 0 0 var(--space-1); }
+.gs-hint { font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--gray); margin: 0 0 var(--space-3); }
+.gs-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2); }
+@media (max-width: 860px) { .gs-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1); } }
+.gs-viewer {
+  position: relative; aspect-ratio: 1; overflow: hidden; cursor: grab; touch-action: pan-y;
+  background: var(--white); border: 1px solid var(--gray-line); border-radius: var(--radius);
+  user-select: none; -webkit-user-select: none;
+}
+.gs-viewer:active { cursor: grabbing; }
+.gs-viewer canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.gs-split {
+  position: absolute; top: 0; bottom: 0; left: var(--gs-split, 50%); width: 1px;
+  background: var(--white); box-shadow: 0 0 0 1px var(--ink); opacity: 0.8;
+  pointer-events: none; display: none;
+}
+.gs-compare {
+  position: absolute; top: 50%; left: clamp(22px, var(--gs-split, 50%), calc(100% - 22px));
+  width: 44px; height: 44px; transform: translate(-50%, -50%); display: none; place-items: center;
+  cursor: ew-resize; touch-action: none; border-radius: var(--radius); outline-offset: -2px;
+}
+.gs-compare svg {
+  width: 28px; height: 28px; padding: 4px; box-sizing: border-box;
+  color: var(--ink); background: var(--white); border: 1px solid var(--ink); border-radius: 50%;
+  pointer-events: none;
+}
+.gs-compare path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.gs-compare:focus-visible { outline: 2px solid var(--blue); }
+.gs-viewer.is-ready:not(.is-error):not(.is-unsupported) .gs-split { display: block; }
+.gs-viewer.is-ready:not(.is-error):not(.is-unsupported) .gs-compare { display: grid; }
+.gs-viewer:not(.is-ready)::after {
+  content: "Loading…"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--gray);
+}
+.gs-viewer.is-error::after, .gs-viewer.is-unsupported::after { content: "Viewer unavailable (WebGL 2 required)"; }
