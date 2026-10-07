@@ -138,22 +138,20 @@
     });
   }
 
-  // Video with sound: start with sound where the autoplay policy allows it; otherwise play muted,
-  // show the "Turn sound on" button, and turn the sound on at the first click or key press anywhere.
+  // Video with sound: start with sound where the autoplay policy allows it; otherwise play muted and
+  // turn the sound on at the first click or key press anywhere.
   // Plays only while on screen.
   function initSoundVideo(frame) {
-    var video = frame.querySelector("video"), btn = frame.querySelector(".sound-on");
+    var video = frame.querySelector("video");
     if (!video) return;
     var visible = false;
-    function sync() { if (btn) btn.hidden = !video.muted; }
-    function unmute() { video.muted = false; sync(); if (visible) video.play().catch(function () {}); }
+    function unmute() { video.muted = false; if (visible) video.play().catch(function () {}); }
     function play() {
       video.muted = false;
       var p = video.play();
-      if (!p || !p.catch) return sync();
-      p.then(sync).catch(function () {
+      if (!p || !p.catch) return;
+      p.catch(function () {
         video.muted = true;
-        sync();
         video.play().catch(function () {});
         // the first click or key press anywhere turns the sound on; clicks on the video itself are
         // left to its own controls (their mute button would otherwise toggle straight back)
@@ -167,8 +165,6 @@
       });
     }
     var started = false;
-    if (btn) btn.addEventListener("click", unmute);
-    video.addEventListener("volumechange", sync);
     if (!("IntersectionObserver" in window)) { play(); return; }
     new IntersectionObserver(function (entries) {
       visible = entries[entries.length - 1].isIntersecting;

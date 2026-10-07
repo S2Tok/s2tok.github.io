@@ -20,7 +20,7 @@
 <!-- Enables JS-only progressive enhancements (scroll reveal, etc.) -->
 <script>document.documentElement.className += " js";</script>
 <link rel="stylesheet" href="assets/css/styles.css?v=7ba2c774">
-<link rel="stylesheet" href="assets/css/site.css?v=6c834958">
+<link rel="stylesheet" href="assets/css/site.css?v=2f7e74dd">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to content</a>
@@ -38,7 +38,6 @@
       <a href="#results">Results</a>
       <a href="#viewer">Viewer</a>
       <a href="#method">Method</a>
-      <a href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code ↗</a>
     </nav>
   </div>
 </header>
@@ -74,23 +73,20 @@
           </p>
         </div>
         <div class="actions">
-          <a class="btn btn-primary" href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code →</a>
+          <span class="btn btn-disabled" aria-disabled="true">Code (on release)</span>
           <span class="btn btn-disabled" aria-disabled="true">Paper (in preparation)</span>
           <span class="btn btn-disabled" aria-disabled="true">BibTeX (on release)</span>
         </div>
       </div>
-      <!-- demo video with sound: site.js plays it with sound where the browser allows, otherwise muted
-           with a "Turn sound on" button; the first click or key press on the page turns the sound on -->
+      <!-- demo video with sound: site.js plays it with sound where the browser allows, otherwise muted;
+           the first click or key press on the page turns the sound on -->
       <div class="hero-demo reveal">
         <div class="media-frame" data-sound-video>
           <video src="assets/videos/s2tok_demo.mp4?v=66e6a01e" poster="assets/videos/s2tok_demo.jpg?v=32bfa149"
                  controls loop playsinline preload="metadata"
                  aria-label="S2Tok demo video"></video>
-          <button class="sound-on" type="button" hidden>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></svg>
-            Turn sound on
-          </button>
         </div>
+        <p class="demo-note">Turn on the sound to hear the narration of the video.</p>
       </div>
     </div>
   </section>
@@ -247,7 +243,6 @@
         <a href="#results">Results</a> ·
         <a href="#viewer">Viewer</a> ·
         <a href="#method">Method</a> ·
-        <a href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code ↗</a> ·
         <a href="https://www.appliedintuition.com/research" target="_blank" rel="noopener">Applied Intuition Research ↗</a>
       </nav>
     </div>
@@ -257,6 +252,6 @@
 
 <script src="assets/js/main.js?v=92919230"></script>
 <script src="assets/js/splat-viewer.js?v=cc6df614"></script>
-<script src="assets/js/site.js?v=82bd91a3"></script>
+<script src="assets/js/site.js?v=c42cfda1"></script>
 </body>
 </html>
