@@ -62,11 +62,8 @@
 .hero-meta sup { font-size: 0.68em; line-height: 0; margin-left: 0.08em; }
 .hero .lead { margin: var(--space-3) 0 0; }
 
-/* Standfirst on the left, teaser figure on the right; stacked below 860px (.split). */
-.hero-split { margin-top: var(--space-4); }
-.hero-split .lead, .hero-split .hero-teaser { margin: 0; }
-.hero-split .lead { font-size: var(--fs-lead); }
-.hero-teaser img { display: block; width: 100%; height: auto; }
+/* Demo video under the hero, at the full width of the band. */
+.hero-demo { margin-top: var(--space-4); }
 
 /* Title, authors and standfirst span the same width as the teaser figure below them
    (the template caps the intro at 60rem and the lead at 56ch). */

@@ -20,7 +20,7 @@
 <!-- Enables JS-only progressive enhancements (scroll reveal, etc.) -->
 <script>document.documentElement.className += " js";</script>
 <link rel="stylesheet" href="assets/css/styles.css?v=7ba2c774">
-<link rel="stylesheet" href="assets/css/site.css?v=dde6f55c">
+<link rel="stylesheet" href="assets/css/site.css?v=9790b990">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to content</a>
@@ -76,23 +76,16 @@
         <div class="actions">
           <a class="btn btn-primary" href="https://github.com/Applied-Shared/S2Tok" target="_blank" rel="noopener">Code →</a>
           <span class="btn btn-disabled" aria-disabled="true">Paper (in preparation)</span>
-          <span class="btn btn-disabled" aria-disabled="true">arXiv (on release)</span>
-          <span class="btn btn-disabled" aria-disabled="true">Weights (on release)</span>
           <span class="btn btn-disabled" aria-disabled="true">BibTeX (on release)</span>
         </div>
       </div>
-      <!-- standfirst on the left, teaser on the right (stacked on narrow screens) -->
-      <div class="split hero-split reveal">
-        <p class="lead">S2Tok continuously reconstructs a 3D Gaussian scene from a streaming video, one
-          frame at a time, from the images alone — <mark class="hl">no camera, depth, or other priors</mark>.
-          It leverages a size-adaptive set of latent spatial tokens as the persistent scene state, and
-          predicts non-pixel-aligned Gaussians rather than pixel-aligned predictions. Whenever there is a
-          new observation, the existing spatial tokens update according to the new observation, and the
-          new frame tokens are aligned to the latent spatial space and selectively admitted.</p>
-        <figure class="hero-teaser">
-          <img src="assets/figures/s2tok_teaser.jpg?v=43fdc248" width="2400" height="1100"
-               alt="S2Tok reconstructions of outdoor, indoor and AI-generated scenes, with the input camera paths">
-        </figure>
+      <!-- demo video (with sound): plays muted while on screen; unmute from the controls -->
+      <div class="hero-demo reveal">
+        <div class="media-frame">
+          <video src="assets/videos/s2tok_demo.mp4?v=66e6a01e" poster="assets/videos/s2tok_demo.jpg?v=32bfa149"
+                 controls muted loop playsinline preload="metadata" data-autoplay
+                 aria-label="S2Tok demo video"></video>
+        </div>
       </div>
     </div>
   </section>
