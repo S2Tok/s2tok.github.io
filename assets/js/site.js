@@ -138,7 +138,50 @@
     });
   }
 
-  function boot() { document.querySelectorAll("[data-scene-viewer]").forEach(initSceneViewer); }
+  // Video with sound: start with sound where the autoplay policy allows it; otherwise play muted,
+  // show the "Turn sound on" button, and turn the sound on at the first click or key press anywhere.
+  // Plays only while on screen.
+  function initSoundVideo(frame) {
+    var video = frame.querySelector("video"), btn = frame.querySelector(".sound-on");
+    if (!video) return;
+    var visible = false;
+    function sync() { if (btn) btn.hidden = !video.muted; }
+    function unmute() { video.muted = false; sync(); if (visible) video.play().catch(function () {}); }
+    function play() {
+      video.muted = false;
+      var p = video.play();
+      if (!p || !p.catch) return sync();
+      p.then(sync).catch(function () {
+        video.muted = true;
+        sync();
+        video.play().catch(function () {});
+        // the first click or key press anywhere turns the sound on; clicks on the video itself are
+        // left to its own controls (their mute button would otherwise toggle straight back)
+        var types = ["pointerdown", "keydown"];
+        function once(e) {
+          if (e.target === video) return;
+          types.forEach(function (t) { document.removeEventListener(t, once, true); });
+          if (video.muted) unmute();
+        }
+        types.forEach(function (t) { document.addEventListener(t, once, true); });
+      });
+    }
+    var started = false;
+    if (btn) btn.addEventListener("click", unmute);
+    video.addEventListener("volumechange", sync);
+    if (!("IntersectionObserver" in window)) { play(); return; }
+    new IntersectionObserver(function (entries) {
+      visible = entries[entries.length - 1].isIntersecting;
+      if (visible) {
+        if (!started) { started = true; play(); } else video.play().catch(function () {});
+      } else video.pause();
+    }, { threshold: 0.25 }).observe(frame);
+  }
+
+  function boot() {
+    document.querySelectorAll("[data-scene-viewer]").forEach(initSceneViewer);
+    document.querySelectorAll("[data-sound-video]").forEach(initSoundVideo);
+  }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();
 })();

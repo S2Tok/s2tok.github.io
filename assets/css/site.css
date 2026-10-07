@@ -62,8 +62,18 @@
 .hero-meta sup { font-size: 0.68em; line-height: 0; margin-left: 0.08em; }
 .hero .lead { margin: var(--space-3) 0 0; }
 
-/* Demo video under the hero, at the full width of the band. */
+/* Demo video under the hero, at the full width of the band, with a "Turn sound on" button while muted. */
 .hero-demo { margin-top: var(--space-4); }
+.sound-on {
+  position: absolute; top: var(--space-2); left: var(--space-2); z-index: 1;
+  display: inline-flex; align-items: center; gap: 0.45em; cursor: pointer;
+  font-family: var(--font-sans); font-size: var(--fs-meta); font-weight: 600; color: var(--ink);
+  background: var(--white); border: 1px solid var(--gray-line); border-radius: 999px; padding: 0.45em 0.95em;
+  box-shadow: var(--shadow);
+}
+.sound-on:hover { color: var(--blue); }
+.sound-on svg { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sound-on svg path:first-child { fill: currentColor; }
 
 /* Title, authors and standfirst span the same width as the teaser figure below them
    (the template caps the intro at 60rem and the lead at 56ch). */
