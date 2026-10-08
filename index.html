@@ -20,7 +20,7 @@
 <!-- Enables JS-only progressive enhancements (scroll reveal, etc.) -->
 <script>document.documentElement.className += " js";</script>
 <link rel="stylesheet" href="assets/css/styles.css?v=7ba2c774">
-<link rel="stylesheet" href="assets/css/site.css?v=2f7e74dd">
+<link rel="stylesheet" href="assets/css/site.css?v=83fed1a7">
 </head>
 <body>
 <a class="skip-link" href="#top">Skip to content</a>
@@ -35,9 +35,10 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav" id="nav">
-      <a href="#results">Results</a>
-      <a href="#viewer">Viewer</a>
+      <a href="#introduction">Introduction</a>
       <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#viewer">Interactive</a>
     </nav>
   </div>
 </header>
@@ -78,15 +79,57 @@
           <button class="btn btn-primary" type="button" id="bibtex-btn">BibTeX</button>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- ===================== Introduction: demo video ===================== -->
+  <section id="introduction">
+    <div class="wide reveal">
+      <p class="eyebrow">Introduction</p>
+      <h2>A narrated walkthrough of S2Tok</h2>
       <!-- demo video with sound: site.js plays it with sound where the browser allows, otherwise muted;
            the first click or key press on the page turns the sound on -->
-      <div class="hero-demo reveal">
+      <div class="intro-video">
         <div class="media-frame" data-sound-video>
           <video src="assets/videos/s2tok_demo.mp4?v=66e6a01e" poster="assets/videos/s2tok_demo.jpg?v=32bfa149"
                  controls loop playsinline preload="metadata"
                  aria-label="S2Tok demo video"></video>
         </div>
         <p class="demo-note">Turn on the sound to hear the narration of the video.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Method ===================== -->
+  <section id="method">
+    <div class="wide reveal">
+      <p class="eyebrow">Method</p>
+      <h2>The scene memory lives inside the backbone</h2>
+      <figure class="figure">
+        <div class="figure-stage figure-stage--plain">
+          <img src="assets/figures/s2tok_pipeline.png?v=c5fa8730" width="2600" height="757"
+               alt="S2Tok pipeline: encoder, stream-spatial transformer with scene tokens, admission, multi-scale decoder and Gaussian head">
+        </div>
+      </figure>
+      <div class="contribs">
+        <div class="contrib">
+          <div class="num">1</div>
+          <h3>Tokenized streaming reconstruction</h3>
+          <p class="muted">The scene is a set of latent spatial tokens. After every frame they are decoded
+            into 3D Gaussians: a reconstruction of everything seen so far, at every step.</p>
+        </div>
+        <div class="contrib">
+          <div class="num">2</div>
+          <h3>One image per step, no KV cache</h3>
+          <p class="muted">Each step sees only the current frame. Past frames are not kept or re-attended;
+            the latent spatial tokens are the only state carried to the next step.</p>
+        </div>
+        <div class="contrib">
+          <div class="num">3</div>
+          <h3>Adaptive token length</h3>
+          <p class="muted">The number of latent spatial tokens is not fixed: each step updates the existing
+            tokens and admits only the selected tokens of the new frame.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -195,40 +238,6 @@
     </div>
   </section>
 
-  <!-- ===================== Method ===================== -->
-  <section id="method">
-    <div class="wide reveal">
-      <p class="eyebrow">Method</p>
-      <h2>The scene memory lives inside the backbone</h2>
-      <figure class="figure">
-        <div class="figure-stage figure-stage--plain">
-          <img src="assets/figures/s2tok_pipeline.png?v=c5fa8730" width="2600" height="757"
-               alt="S2Tok pipeline: encoder, stream-spatial transformer with scene tokens, admission, multi-scale decoder and Gaussian head">
-        </div>
-      </figure>
-      <div class="contribs">
-        <div class="contrib">
-          <div class="num">1</div>
-          <h3>Tokenized streaming reconstruction</h3>
-          <p class="muted">The scene is a set of latent spatial tokens. After every frame they are decoded
-            into 3D Gaussians: a reconstruction of everything seen so far, at every step.</p>
-        </div>
-        <div class="contrib">
-          <div class="num">2</div>
-          <h3>One image per step, no KV cache</h3>
-          <p class="muted">Each step sees only the current frame. Past frames are not kept or re-attended;
-            the latent spatial tokens are the only state carried to the next step.</p>
-        </div>
-        <div class="contrib">
-          <div class="num">3</div>
-          <h3>Adaptive token length</h3>
-          <p class="muted">The number of latent spatial tokens is not fixed: each step updates the existing
-            tokens and admits only the selected tokens of the new frame.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>
 
 <!-- BibTeX citation (from arXiv); the "BibTeX" button copies it. -->
@@ -251,9 +260,10 @@
         <p class="muted" style="max-width:32ch">Streaming 3D Gaussian reconstruction with persistent spatial tokens.</p>
       </div>
       <nav>
-        <a href="#results">Results</a> ·
-        <a href="#viewer">Viewer</a> ·
+        <a href="#introduction">Introduction</a> ·
         <a href="#method">Method</a> ·
+        <a href="#results">Results</a> ·
+        <a href="#viewer">Interactive</a> ·
         <a href="https://www.appliedintuition.com/research" target="_blank" rel="noopener">Applied Intuition Research ↗</a>
       </nav>
     </div>

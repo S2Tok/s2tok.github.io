@@ -62,8 +62,8 @@
 .hero-meta sup { font-size: 0.68em; line-height: 0; margin-left: 0.08em; }
 .hero .lead { margin: var(--space-3) 0 0; }
 
-/* Demo video under the hero, at the full width of the band, with a light note about the narration. */
-.hero-demo { margin-top: var(--space-4); }
+/* Introduction: the demo video at the full width of the band, with a light note about the narration. */
+.intro-video { margin: 0; }
 .demo-note { font-family: var(--font-sans); font-size: var(--fs-meta); color: var(--gray); text-align: center; margin: 0.6rem 0 0; }
 
 /* Title, authors and standfirst span the same width as the teaser figure below them
